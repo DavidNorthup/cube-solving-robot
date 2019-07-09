@@ -4,4 +4,5 @@ A personal project involving building a robot that solves the rubik's cube puzzl
 
 ## Important notes
 1.) This project is currently in progress, but this page will be up to date with my current progress.
+
 2.) The software for the desktop application will require opencv and sfml, and a webcam.
