@@ -12,8 +12,7 @@ and the arduino unit. It will manage the communication to a single unit.
 #include <fcntl.h> 
 #include <unistd.h>
 
-#define COMM_PREFIX "/dev/tty"
-#define DELIM '\n'
+// The size to be allocated for the buffer to read.
 #define BUFFER_SIZE 16
 
 // Only read 1 byte at a time
