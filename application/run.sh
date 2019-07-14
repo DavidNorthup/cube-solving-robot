@@ -10,4 +10,6 @@ echo "Checking if recompilation needed"
 make
 
 echo "Starting: "
-./csr.exe $arg
+./csr.exe $arg 
+
+echo "Finished"
