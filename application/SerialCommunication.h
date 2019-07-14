@@ -18,6 +18,10 @@ and the arduino unit. It will manage the communication to a single unit.
 // Only read 1 byte at a time
 #define READ_SIZE 1
 
+#define PING_PACKET 254
+
+#define IDENTIFICATION_PACKET 255
+
 namespace communication {
 
 class SerialManager {

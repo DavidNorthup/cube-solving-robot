@@ -88,10 +88,12 @@ uint16_t SerialManager::sendMessage(uint16_t message) {
 
 
 /*
-Not yet implemented.
+Ping the robot using a defined packet of information.
 */
 bool SerialManager::isConnected() {
-    return true;
+    uint16_t message = PING_PACKET;
+    uint16_t response = sendMessage(message);
+    return message == response;
 }
 
 }
