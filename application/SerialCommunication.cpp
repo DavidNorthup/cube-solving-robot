@@ -81,7 +81,7 @@ uint16_t SerialManager::sendMessage(uint16_t message) {
     write(file_descriptor, &msg, sizeof(char));
     // Wait for a response, block until recieved 
     memset(buffer, 0, BUFFER_SIZE * sizeof(char));
-    int n = read(file_descriptor, buffer, BUFFER_SIZE);
+    read(file_descriptor, buffer, BUFFER_SIZE);
     uint16_t response = (uint8_t) buffer[0];
     return response;
 }

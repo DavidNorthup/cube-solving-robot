@@ -12,7 +12,6 @@ int main(int argc, char *argv[]) {
         std::cout << "Usage example: " << argv[0] << " [Path to first] [Path to second]" << std::endl;
         return 1;
     }
-    bool done = false;
 
     csr::Robot robot(argv[1], argv[2]);
     std::cout << "Exiting" << std::endl;
