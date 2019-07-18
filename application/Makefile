@@ -1,16 +1,21 @@
-all: csr.exe
+CC=g++
+CFLAGS=-c -Wall
+LDFLAGS=`pkg-config --cflags --libs opencv`
+SOURCES=Driver.cpp Robot.cpp SerialCommunication.cpp
+OBJECTS=$(SOURCES:.cpp=.o)
+EXECUTABLE=csr.exe
 
-serialtest.exe: DriverSerialTest.cpp SerialCommunication.o
-	g++ DriverSerialTest.cpp *.o -o serialtest.exe
 
-csr.exe: Driver.cpp Robot.o SerialCommunication.o
-	g++ Driver.cpp *.o -o csr.exe
+all: $(EXECUTABLE)
 
-Robot.o: Robot.h Robot.cpp
-	g++ -c Robot.cpp
+$(EXECUTABLE): $(OBJECTS) 
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
 
-SerialCommunication.o: SerialCommunication.h SerialCommunication.cpp 
-	g++ -c SerialCommunication.cpp
+.cpp.o:
+	$(CC) $(CFLAGS) $< -o $@
 
 clean:
 	rm *.o *.exe
+
+serialtest.exe: DriverSerialTest.cpp SerialCommunication.o
+	g++ DriverSerialTest.cpp *.o -o serialtest.exe
