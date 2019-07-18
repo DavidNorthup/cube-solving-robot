@@ -1,6 +1,6 @@
 CC=g++
 CFLAGS=-c -Wall
-LDFLAGS=`pkg-config --cflags --libs opencv`
+LDFLAGS=`pkg-config --cflags --libs opencv` -lsfml-window -lsfml-graphics -lsfml-system
 SOURCES=Driver.cpp Robot.cpp SerialCommunication.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=csr.exe
