@@ -4,14 +4,13 @@
 #include <iostream>
 #include <thread>
 
-#define FRAMERATE 60
 
 namespace camera {
 
 class CameraManager {
 
     public:
-    CameraManager(int camera_index);
+    CameraManager(int camera_index, int image_width, int image_height);
     ~CameraManager();
     bool changeCamera(int camera_index);
     void update();

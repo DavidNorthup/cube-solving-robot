@@ -9,12 +9,16 @@ fetch images from the connected webcam using opencv, and format them for
 display in the sfml window. For this to occur, the window will call the
 update function continulosly, and a new image will be fetched as often as possible. 
 */
-CameraManager::CameraManager(int camera_index) {
+CameraManager::CameraManager(int camera_index, int image_width, int image_height) {
     bool opened = changeCamera(camera_index);
     if (!opened) {
         std::cout << "Failed to open the camera, closing program" << std::endl;
         exit(EXIT_FAILURE);
     }
+    cam.set(CV_CAP_PROP_FRAME_WIDTH, image_width);
+    cam.set(CV_CAP_PROP_FRAME_HEIGHT, image_height);
+    std::cout << "Setting camera output dimensions: " << image_width 
+        << " x " << image_height << std::endl;
     cam >> current_frame; // Assure this is never null
 }
 
