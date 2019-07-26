@@ -2,6 +2,7 @@
 #include "MyStepper.h"
 
 #define STEPPER_DELAY 1000 // This is in microseconds
+#define STEPPER_DELAY_SEP 1500
 
 
 /*
@@ -36,9 +37,15 @@ or counter-clockwise if it is given as false. It steps the motor the specified n
 of steps.
 */
 void StepperMotor::step(bool clockwise, int num_steps) {    
+
+    delayMicroseconds(STEPPER_DELAY);
     for (int j = 0; j < num_steps; j++) {
         one_step(clockwise);
-        delayMicroseconds(STEPPER_DELAY);
+        if (num_steps < 50) {
+            delayMicroseconds(STEPPER_DELAY_SEP);
+        } else {
+            delayMicroseconds(STEPPER_DELAY);
+        }
     }
     shutoff();
 }
@@ -49,7 +56,7 @@ represents the stepper motor that is going to be going clockwise, and the second
 is one that will go counterclockwise. The number of steps is the number of steps that each
 motor will perform.
 */
-static void StepperMotor::step_two_motors(StepperMotor clockwise_motor, StepperMotor counter_motor, int number_steps) {
+void StepperMotor::step_two_motors(StepperMotor clockwise_motor, StepperMotor counter_motor, int number_steps) {
     for (int j = 0; j < number_steps; j++) {
         clockwise_motor.one_step(true);
         counter_motor.one_step(false);
@@ -67,6 +74,16 @@ void StepperMotor::shutoff() {
     for (int j = 0; j < PINS_PER_STEPPER; j++) {
         digitalWrite(pins_clockwise[j], LOW); 
     }  
+}
+
+void StepperMotor::hold() {
+    for (int j = 0; j < PINS_PER_STEPPER; j++) {
+        if (j != i) {
+            digitalWrite(pins_clockwise[j] , LOW);
+        } else {
+            digitalWrite(pins_clockwise[j], HIGH);
+        }
+    }
 }
 
 
