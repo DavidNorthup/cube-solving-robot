@@ -83,6 +83,7 @@ uint16_t SerialManager::sendMessage(uint16_t message) {
     memset(buffer, 0, BUFFER_SIZE * sizeof(char));
     read(file_descriptor, buffer, BUFFER_SIZE);
     uint16_t response = (uint8_t) buffer[0];
+    std::cout << "Sent: " << message << " " << "recieved " << response << std::endl;
     return response;
 }
 

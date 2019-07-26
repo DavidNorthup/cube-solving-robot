@@ -23,7 +23,7 @@ to the CSR robot itself.
 // The two least significant bits index the motor within the controller [1-3]
 #define MOTOR_1 0
 #define MOTOR_2 1
-#define MOTOR_3 3
+#define MOTOR_3 2
 
 // The next least significant bit identifies the direction of travel
 #define DIRECTION_CLOCKWISE 0
@@ -32,7 +32,7 @@ to the CSR robot itself.
 // The remaining bits store the number of quarter turns desired, or in the case
 // of zero, the special value used by the separator motors for separation purposes
 // in the slower (ruku style) configuration. 
-#define SEPARATOR_TURN 0;
+#define SEPARATOR_TURN 0
 #define ONE_QUARTER_TURN (1 << 3)
 #define TWO_QUARTER_TURNS (2 << 3)
 #define THREE_QUARTER_TURNS (3 << 3)

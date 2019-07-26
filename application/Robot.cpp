@@ -20,10 +20,10 @@ namespace csr {
 
         std::cout << "Identifying devices" << std::endl;
 
-        if (response1 == LR_IDENTIFIER && response2 == FB_IDENTIFIER) {
+        if (response1 == LR_IDENTIFIER || response2 == FB_IDENTIFIER) {
             lr_manager = sm1;
             fb_manager = sm2;
-        } else if (response1 == FB_IDENTIFIER && response2 == LR_IDENTIFIER) {
+        } else if (response1 == FB_IDENTIFIER || response2 == LR_IDENTIFIER) {
             lr_manager = sm2;
             fb_manager = sm1;
         } else {
