@@ -2,6 +2,8 @@
 #include "Robot.h"
 #include "Options.h"
 
+#include <chrono>
+
 #define WINDOW_WIDTH 1600
 #define WINDOW_HEIGHT 700
 #define WINDOW_TITLE "Cube Solving Robot"
@@ -78,28 +80,69 @@ int main(int argc, char *argv[]) {
                     camera::CSRImageProcessing::saveImageToFile("sample.jpg", image);
                 }
                 if (ctrl_held && event.key.code == sf::Keyboard::L) { // Turn the left motor
-                    robot.sendCommand(MOTOR_2 + MOTOR_3 + DIRECTION_CLOCKWISE + TWO_QUARTER_TURNS, LR_IDENTIFIER);
+                    robot.sendCommand(MOTOR_2 + DIRECTION_CLOCKWISE + ONE_QUARTER_TURN, LR_IDENTIFIER);
                 }
                 if (ctrl_held && event.key.code == sf::Keyboard::R) { // Turn the right motor
                     robot.sendCommand(MOTOR_3 + DIRECTION_CLOCKWISE + ONE_QUARTER_TURN, LR_IDENTIFIER);
                 }
                 if (ctrl_held && event.key.code == sf::Keyboard::F) { // Turn the front motor
-                    robot.sendCommand(MOTOR_2 + MOTOR_3 + DIRECTION_CLOCKWISE + TWO_QUARTER_TURNS, FB_IDENTIFIER);
+                    robot.sendCommand(MOTOR_3  + DIRECTION_CLOCKWISE + ONE_QUARTER_TURN, FB_IDENTIFIER);
                 }
                 if (ctrl_held && event.key.code == sf::Keyboard::B) { // Turn the back motor
-                    robot.sendCommand(MOTOR_3 + DIRECTION_CLOCKWISE + ONE_QUARTER_TURN, FB_IDENTIFIER);
+                    robot.sendCommand(MOTOR_2 + DIRECTION_CLOCKWISE + ONE_QUARTER_TURN, FB_IDENTIFIER);
                 }
-                if (ctrl_held && event.key.code == sf::Keyboard::Num1) { // Separate FB
-                    robot.sendCommand(MOTOR_1 + DIRECTION_COUNTERCLOCKWISE + SEPARATOR_TURN, FB_IDENTIFIER);
+                if (ctrl_held && event.key.code == sf::Keyboard::U) { // Turn the up motor
+                    robot.sendCommand(MOTOR_1 + DIRECTION_CLOCKWISE + ONE_QUARTER_TURN, FB_IDENTIFIER);
                 }
-                if (ctrl_held && event.key.code == sf::Keyboard::Num2) { // Return FB
-                    robot.sendCommand(MOTOR_1 + DIRECTION_CLOCKWISE + SEPARATOR_TURN, FB_IDENTIFIER);
+                if (ctrl_held && event.key.code == sf::Keyboard::D) { // Turn the down motor
+                    robot.sendCommand(MOTOR_1 + DIRECTION_CLOCKWISE + ONE_QUARTER_TURN, LR_IDENTIFIER);
                 }
-                if (ctrl_held && event.key.code == sf::Keyboard::Num3) { // Separate RL
-                    robot.sendCommand(MOTOR_1 + DIRECTION_COUNTERCLOCKWISE + SEPARATOR_TURN, LR_IDENTIFIER);
+
+                if (ctrl_held && event.key.code == sf::Keyboard::T) { // Test
+                    robot.sendCommand(MOVE_R);
+                    robot.sendCommand(MOVE_D);
+                    robot.sendCommand(MOVE_L2);
+                    robot.sendCommand(MOVE_B);
+                    robot.sendCommand(MOVE_F_PRIME);
+                    robot.sendCommand(MOVE_U2);
+                    robot.sendCommand(MOVE_D_PRIME);
+                    robot.sendCommand(MOVE_L_PRIME);
+                    robot.sendCommand(MOVE_F_PRIME);
+                    robot.sendCommand(MOVE_B_PRIME);
+                    robot.sendCommand(MOVE_U_PRIME);
+                    robot.sendCommand(MOVE_L);
+                    robot.sendCommand(MOVE_D);
+                    robot.sendCommand(MOVE_F);
+                    robot.sendCommand(MOVE_R_PRIME);
+                    robot.sendCommand(MOVE_D2);
+                    robot.sendCommand(MOVE_L2);
                 }
-                if (ctrl_held && event.key.code == sf::Keyboard::Num4) { // Return RL
-                    robot.sendCommand(MOTOR_1 + DIRECTION_CLOCKWISE + SEPARATOR_TURN, LR_IDENTIFIER);
+
+                if (ctrl_held && event.key.code == sf::Keyboard::Return) {
+
+                    
+                    usleep(1000*1000*3);
+                    auto start = std::chrono::high_resolution_clock::now();
+                    robot.sendCommand(MOVE_L2);
+                    robot.sendCommand(MOVE_D2);
+                    robot.sendCommand(MOVE_R);
+                    robot.sendCommand(MOVE_F_PRIME);
+                    robot.sendCommand(MOVE_D_PRIME);
+                    robot.sendCommand(MOVE_L_PRIME);
+                    robot.sendCommand(MOVE_U);
+                    robot.sendCommand(MOVE_B);
+                    robot.sendCommand(MOVE_F);
+                    robot.sendCommand(MOVE_L);
+                    robot.sendCommand(MOVE_D);
+                    robot.sendCommand(MOVE_U2);
+                    robot.sendCommand(MOVE_F);
+                    robot.sendCommand(MOVE_B_PRIME);
+                    robot.sendCommand(MOVE_L2);
+                    robot.sendCommand(MOVE_D_PRIME);
+                    robot.sendCommand(MOVE_R_PRIME);
+                    auto end = std::chrono::high_resolution_clock::now();
+                    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end-start);
+                    std::cout << "Cube solved in " << duration.count() << " milliseconds" << std::endl;
                 }
             }
             if (event.type == sf::Event::KeyReleased) {
@@ -124,24 +167,3 @@ int main(int argc, char *argv[]) {
     }
     return 0;
 }
-
-
-// int delay = 1000 * 2000;
-// robot.sendCommand(MOTOR_1 + DIRECTION_COUNTERCLOCKWISE + SEPARATOR_TURN, LR_IDENTIFIER); // Open arms
-// usleep(delay);
-// robot.sendCommand(MOTOR_2 + DIRECTION_CLOCKWISE + ONE_QUARTER_TURN, LR_IDENTIFIER); // Turn one corresponding hand
-// usleep(delay);
-// robot.sendCommand(MOTOR_1 + DIRECTION_CLOCKWISE + SEPARATOR_TURN, LR_IDENTIFIER);
-// usleep(delay);
-// robot.sendCommand(MOTOR_1 + DIRECTION_COUNTERCLOCKWISE + SEPARATOR_TURN, FB_IDENTIFIER);
-// usleep(delay);
-// robot.sendCommand(MOTOR_2 + MOTOR_3 + DIRECTION_CLOCKWISE + ONE_QUARTER_TURN, LR_IDENTIFIER);
-// usleep(delay);
-// robot.sendCommand(MOTOR_1 + DIRECTION_CLOCKWISE + SEPARATOR_TURN, FB_IDENTIFIER);
-// usleep(delay);
-// robot.sendCommand(MOTOR_1 + DIRECTION_COUNTERCLOCKWISE + SEPARATOR_TURN, LR_IDENTIFIER);
-// usleep(delay);
-// robot.sendCommand(MOTOR_3 + DIRECTION_CLOCKWISE + ONE_QUARTER_TURN, LR_IDENTIFIER);
-// usleep(delay);
-// robot.sendCommand(MOTOR_1 + DIRECTION_CLOCKWISE + SEPARATOR_TURN, LR_IDENTIFIER);
-// usleep(delay);
