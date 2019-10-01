@@ -6,6 +6,7 @@ to the CSR robot itself.
 */
 
 #include "SerialCommunication.h"
+#include <stdlib.h>
 
 // This number represents the minimum number of microseconds to pause to allow the arduino's 
 // to reset after connecting to them.
@@ -62,6 +63,10 @@ to the CSR robot itself.
 #define MOVE_D_PRIME MOTOR_1 + DIRECTION_COUNTERCLOCKWISE + ONE_QUARTER_TURN, FB_IDENTIFIER
 #define MOVE_D2 MOTOR_1 + DIRECTION_CLOCKWISE + TWO_QUARTER_TURNS, FB_IDENTIFIER 
 
+#define MOVES {"R", "R'", "R2", "L", "L'", "L2", "F", "F'", "F2", "B", "B'", "B2", "U", "U'", "U2", "D", "D'", "D2"}
+
+#define SCRAMBLE_LENGTH 20
+
 // So for example if we wanted to perform a move on motor 2, clockwise, with 3 quarter turns,
 // we would pass the following into the sendCommand function: MOTOR_2 + DIRECTION_CLOCKWISE + THREE_QUARTER_TURNS
 
@@ -72,6 +77,10 @@ class Robot {
     Robot(std::string port1, std::string port2);
     ~Robot();
     bool sendCommand(uint16_t command, uint16_t smIdentifier);
+    void performMove(std::string move);
+    std::string reverseMove(std::string move);
+    std::string performMoves(std::string moves);
+    std::string scramble();
 
     private:
     communication::SerialManager * lr_manager;

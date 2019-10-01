@@ -38,6 +38,7 @@ void drawWebcam(sf::RenderWindow * window, sf::Image image) {
     window->draw(image_sprite);
 }
 
+
 /*
 Currently the program attempts to communicate with the arudinos one byte 
 at a time via serial connenctions on the COM ports. 
@@ -55,15 +56,18 @@ int main(int argc, char *argv[]) {
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_TITLE);
 
 
-    int target_camera_size = WINDOW_WIDTH / 2 - 2*PADDING;
-    camera::CameraManager cam(0, target_camera_size, target_camera_size);
+    // int target_camera_size = WINDOW_WIDTH / 2 - 2*PADDING;
+    // camera::CameraManager cam(0, target_camera_size, target_camera_size);
 
 
     options::OptionsManager options(OPTIONS_FILE_PATH);
     // Apply the selected options
-    cam.changeCameraBrightness(options.getOption(CAMERA_BRIGHTNESS_OPTION));
+    // cam.changeCameraBrightness(options.getOption(CAMERA_BRIGHTNESS_OPTION));
+
+    std::string scramble = "";
 
     bool ctrl_held = false;
+    bool alt_held = false;
 
     while(window.isOpen()) {
         sf::Event event;
@@ -75,71 +79,83 @@ int main(int argc, char *argv[]) {
                 if (event.key.code == sf::Keyboard::LControl) {
                     ctrl_held = true;
                 }
+                if (event.key.code == sf::Keyboard::LAlt) {
+                    alt_held = true;
+                }
                 if (ctrl_held && event.key.code == sf::Keyboard::S) {
-                    cv::Mat image = cam.getFrame();
-                    camera::CSRImageProcessing::saveImageToFile("sample.jpg", image);
-                }
-                if (ctrl_held && event.key.code == sf::Keyboard::L) { // Turn the left motor
-                    robot.sendCommand(MOTOR_2 + DIRECTION_CLOCKWISE + ONE_QUARTER_TURN, LR_IDENTIFIER);
-                }
-                if (ctrl_held && event.key.code == sf::Keyboard::R) { // Turn the right motor
-                    robot.sendCommand(MOTOR_3 + DIRECTION_CLOCKWISE + ONE_QUARTER_TURN, LR_IDENTIFIER);
-                }
-                if (ctrl_held && event.key.code == sf::Keyboard::F) { // Turn the front motor
-                    robot.sendCommand(MOTOR_3  + DIRECTION_CLOCKWISE + ONE_QUARTER_TURN, FB_IDENTIFIER);
-                }
-                if (ctrl_held && event.key.code == sf::Keyboard::B) { // Turn the back motor
-                    robot.sendCommand(MOTOR_2 + DIRECTION_CLOCKWISE + ONE_QUARTER_TURN, FB_IDENTIFIER);
-                }
-                if (ctrl_held && event.key.code == sf::Keyboard::U) { // Turn the up motor
-                    robot.sendCommand(MOTOR_1 + DIRECTION_CLOCKWISE + ONE_QUARTER_TURN, FB_IDENTIFIER);
-                }
-                if (ctrl_held && event.key.code == sf::Keyboard::D) { // Turn the down motor
-                    robot.sendCommand(MOTOR_1 + DIRECTION_CLOCKWISE + ONE_QUARTER_TURN, LR_IDENTIFIER);
+                    // cv::Mat image = cam.getFrame();
+                    // camera::CSRImageProcessing::saveImageToFile("sample.jpg", image);
                 }
 
+                if (ctrl_held && alt_held) {
+                    if (event.key.code == sf::Keyboard::R) {
+                        robot.performMove("R2");
+                    }
+                    if (event.key.code == sf::Keyboard::L) {
+                        robot.performMove("L2");
+                    }
+                    if (event.key.code == sf::Keyboard::U) {
+                        robot.performMove("U2");
+                    }
+                    if (event.key.code == sf::Keyboard::D) {
+                        robot.performMove("D2");
+                    }
+                    if (event.key.code == sf::Keyboard::F) {
+                        robot.performMove("F2");
+                    }
+                    if (event.key.code == sf::Keyboard::B) {
+                        robot.performMove("B2");
+                    }
+                } else if (ctrl_held) {
+                    if (event.key.code == sf::Keyboard::R) {
+                        robot.performMove("R");
+                    }
+                    if (event.key.code == sf::Keyboard::L) {
+                        robot.performMove("L");
+                    }
+                    if (event.key.code == sf::Keyboard::U) {
+                        robot.performMove("U");
+                    }
+                    if (event.key.code == sf::Keyboard::D) {
+                        robot.performMove("D");
+                    }
+                    if (event.key.code == sf::Keyboard::F) {
+                        robot.performMove("F");
+                    }
+                    if (event.key.code == sf::Keyboard::B) {
+                        robot.performMove("B");
+                    }
+                } else if (alt_held) {
+                    if (event.key.code == sf::Keyboard::R) {
+                        robot.performMove("R'");
+                    }
+                    if (event.key.code == sf::Keyboard::L) {
+                        robot.performMove("L'");
+                    }
+                    if (event.key.code == sf::Keyboard::U) {
+                        robot.performMove("U'");
+                    }
+                    if (event.key.code == sf::Keyboard::D) {
+                        robot.performMove("D'");
+                    }
+                    if (event.key.code == sf::Keyboard::F) {
+                        robot.performMove("F'");
+                    }
+                    if (event.key.code == sf::Keyboard::B) {
+                        robot.performMove("B'");
+                    }
+                }
+
+
+
                 if (ctrl_held && event.key.code == sf::Keyboard::T) { // Test
-                    robot.sendCommand(MOVE_R);
-                    robot.sendCommand(MOVE_D);
-                    robot.sendCommand(MOVE_L2);
-                    robot.sendCommand(MOVE_B);
-                    robot.sendCommand(MOVE_F_PRIME);
-                    robot.sendCommand(MOVE_U2);
-                    robot.sendCommand(MOVE_D_PRIME);
-                    robot.sendCommand(MOVE_L_PRIME);
-                    robot.sendCommand(MOVE_F_PRIME);
-                    robot.sendCommand(MOVE_B_PRIME);
-                    robot.sendCommand(MOVE_U_PRIME);
-                    robot.sendCommand(MOVE_L);
-                    robot.sendCommand(MOVE_D);
-                    robot.sendCommand(MOVE_F);
-                    robot.sendCommand(MOVE_R_PRIME);
-                    robot.sendCommand(MOVE_D2);
-                    robot.sendCommand(MOVE_L2);
+                    scramble += robot.scramble();
                 }
 
                 if (ctrl_held && event.key.code == sf::Keyboard::Return) {
-
-                    
-                    usleep(1000*1000*3);
                     auto start = std::chrono::high_resolution_clock::now();
-                    robot.sendCommand(MOVE_L2);
-                    robot.sendCommand(MOVE_D2);
-                    robot.sendCommand(MOVE_R);
-                    robot.sendCommand(MOVE_F_PRIME);
-                    robot.sendCommand(MOVE_D_PRIME);
-                    robot.sendCommand(MOVE_L_PRIME);
-                    robot.sendCommand(MOVE_U);
-                    robot.sendCommand(MOVE_B);
-                    robot.sendCommand(MOVE_F);
-                    robot.sendCommand(MOVE_L);
-                    robot.sendCommand(MOVE_D);
-                    robot.sendCommand(MOVE_U2);
-                    robot.sendCommand(MOVE_F);
-                    robot.sendCommand(MOVE_B_PRIME);
-                    robot.sendCommand(MOVE_L2);
-                    robot.sendCommand(MOVE_D_PRIME);
-                    robot.sendCommand(MOVE_R_PRIME);
+                    robot.performMoves(scramble);
+                    scramble = "";
                     auto end = std::chrono::high_resolution_clock::now();
                     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end-start);
                     std::cout << "Cube solved in " << duration.count() << " milliseconds" << std::endl;
@@ -148,6 +164,9 @@ int main(int argc, char *argv[]) {
             if (event.type == sf::Event::KeyReleased) {
                 if (event.key.code == sf::Keyboard::LControl) {
                     ctrl_held = false;
+                }
+                if (event.key.code == sf::Keyboard::LAlt) {
+                    alt_held = false;
                 }
             }
         }
@@ -159,9 +178,9 @@ int main(int argc, char *argv[]) {
         window.draw(background);
 
         // Draw the webcam feed
-        cam.update();
-        sf::Image image = cam.getDisplayableImage();
-        drawWebcam(&window, image);
+        // cam.update();
+        // sf::Image image = cam.getDisplayableImage();
+        // drawWebcam(&window, image);
 
         window.display();
     }
