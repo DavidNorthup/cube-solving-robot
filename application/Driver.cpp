@@ -56,13 +56,13 @@ int main(int argc, char *argv[]) {
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_TITLE);
 
 
-    // int target_camera_size = WINDOW_WIDTH / 2 - 2*PADDING;
-    // camera::CameraManager cam(0, target_camera_size, target_camera_size);
+    int target_camera_size = WINDOW_WIDTH / 2 - 2*PADDING;
+    camera::CameraManager cam(0, 640, 480);
 
 
     options::OptionsManager options(OPTIONS_FILE_PATH);
     // Apply the selected options
-    // cam.changeCameraBrightness(options.getOption(CAMERA_BRIGHTNESS_OPTION));
+    cam.changeCameraBrightness(options.getOption(CAMERA_BRIGHTNESS_OPTION));
 
     std::string scramble = "";
 
@@ -83,8 +83,8 @@ int main(int argc, char *argv[]) {
                     alt_held = true;
                 }
                 if (ctrl_held && event.key.code == sf::Keyboard::S) {
-                    // cv::Mat image = cam.getFrame();
-                    // camera::CSRImageProcessing::saveImageToFile("sample.jpg", image);
+                    cv::Mat image = cam.getFrame();
+                    camera::CSRImageProcessing::saveImageToFile("sample.jpg", image);
                 }
 
                 if (ctrl_held && alt_held) {
@@ -144,6 +144,12 @@ int main(int argc, char *argv[]) {
                     if (event.key.code == sf::Keyboard::B) {
                         robot.performMove("B'");
                     }
+
+
+                    if (event.key.code == sf::Keyboard::Return) {
+                        std::string sol = "D2 R B2 D F B R2 D' L' D R B2 U' F2 L2 U' D2 B2 D R2";
+                        robot.performMoves(sol);
+                    }
                 }
 
 
@@ -151,7 +157,10 @@ int main(int argc, char *argv[]) {
                 if (ctrl_held && event.key.code == sf::Keyboard::T) { // Test
                     scramble += robot.scramble();
                 }
-
+                if (ctrl_held && event.key.code == sf::Keyboard::BackSpace) {
+                    std::cout << "Cleared" << std::endl;
+                    scramble = "";
+                }
                 if (ctrl_held && event.key.code == sf::Keyboard::Return) {
                     auto start = std::chrono::high_resolution_clock::now();
                     robot.performMoves(scramble);
@@ -178,9 +187,9 @@ int main(int argc, char *argv[]) {
         window.draw(background);
 
         // Draw the webcam feed
-        // cam.update();
-        // sf::Image image = cam.getDisplayableImage();
-        // drawWebcam(&window, image);
+        cam.update();
+        sf::Image image = cam.getDisplayableImage();
+        drawWebcam(&window, image);
 
         window.display();
     }

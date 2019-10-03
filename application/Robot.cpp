@@ -112,11 +112,13 @@ namespace csr {
                 std::string move = moves.substr(last_space + 1, len);
                 len = 0;
                 performMove(move);
+                // usleep(200);
                 reverse = reverseMove(move) + " " + reverse;
                 last_space = i;
             } else {
                 len ++;
             }
+            
         }
         std::string move = moves.substr(last_space + 1, len);
         reverse = reverseMove(move) + " " + reverse;
@@ -126,6 +128,7 @@ namespace csr {
     }
 
     std::string Robot::scramble() {
+        srand(time(NULL));
         std::string moves = "";
         std::string possible_moves[18] = MOVES; 
 

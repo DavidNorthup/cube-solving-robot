@@ -18,6 +18,7 @@ CameraManager::CameraManager(int camera_index, int image_width, int image_height
     }
     cam.set(CV_CAP_PROP_FRAME_WIDTH, image_width);
     cam.set(CV_CAP_PROP_FRAME_HEIGHT, image_height);
+    cam.set(CV_CAP_PROP_FOURCC, CV_FOURCC('M', 'J', 'P', 'G'));
     std::cout << "Setting camera output dimensions: " << image_width 
         << " x " << image_height << std::endl;
     std::cout << "Opening Sampling Locations File" << std::endl;
