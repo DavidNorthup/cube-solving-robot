@@ -1,9 +1,8 @@
 #include "Arduino.h"
 #include "MyStepper.h"
 
-#define STEPPER_DELAY 1000 // This is in microseconds
-#define STEPPER_DELAY_SEP 1500
-
+#define STEPPER_DELAY 1500 // This is in microseconds
+#define STEPPER_MIN_DELAY 500
 
 /*
 This is the constructor for the stepper motor object. There is only one 
@@ -29,7 +28,10 @@ StepperMotor::StepperMotor(int pins_clockwise[]) {
     }
 }
 
-
+int StepperMotor::calc_delay(int x, int n) {
+    double xm = x - (n/2);
+    return (int) ((4.0 * xm * xm * (STEPPER_DELAY - STEPPER_MIN_DELAY)) / (n * n) + STEPPER_MIN_DELAY);
+}
 
 /*
 This function steps the specified motor clockwise if the boolean parameter is true,
@@ -41,11 +43,7 @@ void StepperMotor::step(bool clockwise, int num_steps) {
     delayMicroseconds(STEPPER_DELAY);
     for (int j = 0; j < num_steps; j++) {
         one_step(clockwise);
-        if (num_steps < 50) {
-            delayMicroseconds(STEPPER_DELAY_SEP);
-        } else {
-            delayMicroseconds(STEPPER_DELAY);
-        }
+        delayMicroseconds(calc_delay(j, num_steps));
     }
     shutoff();
 }

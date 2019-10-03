@@ -1,13 +1,12 @@
 #include <MyStepper.h>
 
 #define STEPS_PER_QUARTER_TURN 50
-#define STEPS_PER_SEPARATION 22
 
 int identifier = 1; // 1 for LR, 2 for FB
 
-int motor1_pins[] = {13,11,12,10};
+int motor1_pins[] = {10,12,11,13};
 int motor2_pins[] = {9,7,8,6};
-int motor3_pins[] = {5,3,4,2};
+int motor3_pins[] = {2,4,3,5};
 
 StepperMotor motor1(motor1_pins);
 StepperMotor motor2(motor2_pins);
@@ -33,11 +32,7 @@ void loop() {
       int quarter_turns = (num_read >> 3);
 
       if (motor_index == 0) {
-        if (!dir_clockwise) {
-          motor1.step(dir_clockwise, STEPS_PER_SEPARATION);
-        } else {
-          motor1.step(dir_clockwise, STEPS_PER_SEPARATION + 1);
-        } 
+        motor1.step(dir_clockwise, quarter_turns * STEPS_PER_QUARTER_TURN);
       }
       if (motor_index == 1) {
         motor2.step(dir_clockwise, quarter_turns * STEPS_PER_QUARTER_TURN);
