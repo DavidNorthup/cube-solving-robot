@@ -9,6 +9,8 @@
 #define WINDOW_TITLE "Cube Solving Robot"
 
 
+#define CAMERA_PORT 2
+
 #define PADDING 20
 #define BACKGROUND_COLOR sf::Color(40,40,40,255)
 #define BACKDROP_FILL sf::Color(80,80,80, 255)
@@ -57,7 +59,7 @@ int main(int argc, char *argv[]) {
 
 
     int target_camera_size = WINDOW_WIDTH / 2 - 2*PADDING;
-    camera::CameraManager cam(0, 640, 480);
+    camera::CameraManager cam(CAMERA_PORT, target_camera_size, target_camera_size);
 
 
     options::OptionsManager options(OPTIONS_FILE_PATH);

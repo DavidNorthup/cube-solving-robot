@@ -1,6 +1,6 @@
 CC=g++
 CFLAGS=-c -Wall -g
-LDFLAGS=-lsfml-window -lsfml-graphics -lsfml-system `pkg-config --cflags --libs opencv` 
+LDFLAGS=-lsfml-window -lsfml-graphics -lsfml-system `pkg-config --cflags --libs opencv4`
 SOURCES=Driver.cpp Robot.cpp SerialCommunication.cpp Camera.cpp Options.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=csr.exe
@@ -12,7 +12,7 @@ $(EXECUTABLE): $(OBJECTS) *.h
 	$(CC) $(OBJECTS) -o $@  $(LDFLAGS)
 
 .cpp.o: $< *.h
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
 
 clean:
 	rm *.o *.exe

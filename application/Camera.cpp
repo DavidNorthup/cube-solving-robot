@@ -16,9 +16,9 @@ CameraManager::CameraManager(int camera_index, int image_width, int image_height
         std::cout << "Failed to open the camera, closing program" << std::endl;
         exit(EXIT_FAILURE);
     }
-    cam.set(CV_CAP_PROP_FRAME_WIDTH, image_width);
-    cam.set(CV_CAP_PROP_FRAME_HEIGHT, image_height);
-    cam.set(CV_CAP_PROP_FOURCC, CV_FOURCC('M', 'J', 'P', 'G'));
+    cam.set(cv::CAP_PROP_FRAME_WIDTH, image_width);
+    cam.set(cv::CAP_PROP_FRAME_HEIGHT, image_height);
+   // cam.set(CV_CAP_PROP_FOURCC, CV_FOURCC('M', 'J', 'P', 'G'));
     std::cout << "Setting camera output dimensions: " << image_width 
         << " x " << image_height << std::endl;
     std::cout << "Opening Sampling Locations File" << std::endl;
@@ -86,7 +86,7 @@ bool CameraManager::changeCamera(int camera_index) {
 }
 
 void CameraManager::changeCameraBrightness(double value) {
-    cam.set(CV_CAP_PROP_BRIGHTNESS, value);
+    cam.set(cv::CAP_PROP_BRIGHTNESS, value);
 }
 
 /*
