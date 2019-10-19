@@ -5,7 +5,9 @@ A personal project involving building a robot that solves the rubik's cube puzzl
 The arduino itself is only dependent on the arduino libraries included with the default IDE. 
 
 The desktop application requires the following additional libraries:
+
     1.) OpenCV 
+    
     2.) SFML
 
 
