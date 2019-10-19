@@ -116,7 +116,7 @@ int main (int argc, char* argv[]) {
     }
 
 
-    for (int i = 2; i < 4; i++) {
+    for (int i = 0; i < 6; i++) {
         namedWindow("Training Client", WINDOW_AUTOSIZE);
         imshow("Training Client", masks[i]);
         waitKey(0);
