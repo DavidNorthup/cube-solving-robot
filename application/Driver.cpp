@@ -1,15 +1,16 @@
 #include "Camera.h"
 #include "Robot.h"
 #include "Options.h"
+#include <string>
 
 #include <chrono>
+#include <algorithm>
 
 #define WINDOW_WIDTH 1600
 #define WINDOW_HEIGHT 700
 #define WINDOW_TITLE "Cube Solving Robot"
 
-
-#define CAMERA_PORT 2
+#define CAMERA_PORT 0
 
 #define PADDING 20
 #define BACKGROUND_COLOR sf::Color(40,40,40,255)
@@ -34,10 +35,21 @@ void drawWebcam(sf::RenderWindow * window, sf::Image image) {
     image_texture.loadFromImage(image);
     image_sprite.setTexture(image_texture);
     sf::Vector2u image_size = image.getSize();
+
     sf::Vector2f delta(backdrop_size.x-image_size.x, backdrop_size.y-image_size.y);
     image_sprite.setPosition(PADDING + delta.x/2, PADDING + delta.y/2);
     window->draw(backdrop);
     window->draw(image_sprite);
+}
+
+void drawScan(sf::RenderWindow * window) {
+    sf::RectangleShape backdrop;
+    sf::Vector2f backdrop_size(WINDOW_WIDTH /2 - 2 * PADDING, WINDOW_HEIGHT - 2*PADDING);
+    backdrop.setSize(backdrop_size);
+    backdrop.setFillColor(BACKDROP_FILL);
+    backdrop.setPosition(PADDING + WINDOW_WIDTH/2, PADDING);
+
+    window->draw(backdrop);
 }
 
 
@@ -58,13 +70,13 @@ int main(int argc, char *argv[]) {
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_TITLE);
 
 
-    int target_camera_size = WINDOW_WIDTH / 2 - 2*PADDING;
-    camera::CameraManager cam(CAMERA_PORT, target_camera_size, target_camera_size);
+    int target_camera_size = std::min(WINDOW_WIDTH / 2 - 2 * PADDING, WINDOW_HEIGHT / 2 * 2 * PADDING);
+    camera::CameraManager cam(CAMERA_PORT, target_camera_size/3*4, target_camera_size/4*3);
 
 
     options::OptionsManager options(OPTIONS_FILE_PATH);
     // Apply the selected options
-    cam.changeCameraBrightness(options.getOption(CAMERA_BRIGHTNESS_OPTION));
+//    cam.changeCameraBrightness(options.getOption(CAMERA_BRIGHTNESS_OPTION));
 
     std::string scramble = "";
 
@@ -84,9 +96,22 @@ int main(int argc, char *argv[]) {
                 if (event.key.code == sf::Keyboard::LAlt) {
                     alt_held = true;
                 }
-                if (ctrl_held && event.key.code == sf::Keyboard::S) {
+                if (ctrl_held && !alt_held && event.key.code == sf::Keyboard::S) {
                     cv::Mat image = cam.getFrame();
                     camera::CSRImageProcessing::saveImageToFile("sample.jpg", image);
+                }
+
+                if (ctrl_held && alt_held && event.key.code == sf::Keyboard::S) {
+                    for (int i = 0; i < 5; i++) {
+                        std::string filename = "samples/sample" + std::to_string(i) + ".jpg";
+                        robot.scramble(5);
+                        usleep(1000*5000);
+                        for (int j = 0; j < 5; j++) {
+                            cam.update();
+                        }
+                        cv::Mat image = cam.getFrame();
+                        camera::CSRImageProcessing::saveImageToFile(filename, image);
+                    }
                 }
 
                 if (ctrl_held && alt_held) {
@@ -156,8 +181,8 @@ int main(int argc, char *argv[]) {
 
 
 
-                if (ctrl_held && event.key.code == sf::Keyboard::T) { // Test
-                    scramble += robot.scramble();
+                if (ctrl_held && event.key.code == sf::Keyboard::T) {
+                    scramble += robot.scramble(SCRAMBLE_LENGTH);
                 }
                 if (ctrl_held && event.key.code == sf::Keyboard::BackSpace) {
                     std::cout << "Cleared" << std::endl;
@@ -183,6 +208,7 @@ int main(int argc, char *argv[]) {
         }
 
         // Paint the background
+        window.clear();
         sf::RectangleShape background;
         background.setSize(sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT));
         background.setFillColor(BACKGROUND_COLOR);
@@ -192,6 +218,7 @@ int main(int argc, char *argv[]) {
         cam.update();
         sf::Image image = cam.getDisplayableImage();
         drawWebcam(&window, image);
+        drawScan(&window);
 
         window.display();
     }

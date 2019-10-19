@@ -112,7 +112,7 @@ namespace csr {
                 std::string move = moves.substr(last_space + 1, len);
                 len = 0;
                 performMove(move);
-                // usleep(200);
+                // usleep(10000);
                 reverse = reverseMove(move) + " " + reverse;
                 last_space = i;
             } else {
@@ -127,12 +127,12 @@ namespace csr {
         return reverse.substr(0, reverse.length() - 1);
     }
 
-    std::string Robot::scramble() {
+    std::string Robot::scramble(int len) {
         srand(time(NULL));
         std::string moves = "";
         std::string possible_moves[18] = MOVES; 
 
-        for (size_t i = 0; i < SCRAMBLE_LENGTH; i++) {
+        for (int i = 0; i < len; i++) {
             int r = rand() % 18;
             std::cout << r << " " << possible_moves[r] << std::endl; 
             moves = possible_moves[r] + " " + moves;
