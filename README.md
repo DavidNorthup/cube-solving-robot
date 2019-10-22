@@ -1,3 +1,4 @@
+![CSR](Still.png)
 ![CSR](WorkingScan.png)
 
 # cube-solving-robot
