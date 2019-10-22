@@ -1,5 +1,4 @@
 ![CSR](WorkingScan.png)
-Format: ![Image of the software at work.]
 
 # cube-solving-robot
 A personal project involving building a robot that solves the rubik's cube puzzle. There are three major components to this project. There are the robot parts themselves, the arduino code that controls the motion of the robot, and the desktop application that is used to control the robot and solve the puzzles. The application software and additional arduino libraries are written in c++. There are also a few utilities that I have included to make certain tasks more automatic.
