@@ -6,9 +6,11 @@ The arduino itself is only dependent on the arduino libraries included with the 
 
 The desktop application requires the following additional libraries:
 
-    1.) OpenCV 
+    1.) [OpenCV](https://opencv.org/)
     
-    2.) SFML
+    2.) [SFML](https://www.sfml-dev.org/)
+    
+    3.) [ckociemba](https://github.com/muodov/kociemba), a fast implementation of the two phase algorithm for solving rubik's cube puzzles.
 
 
 # Utilities
