@@ -80,7 +80,7 @@ class Robot {
     void performMove(std::string move);
     std::string reverseMove(std::string move);
     std::string performMoves(std::string moves);
-    std::string scramble();
+    std::string scramble(int len);
 
     private:
     communication::SerialManager * lr_manager;
