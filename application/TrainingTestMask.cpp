@@ -7,8 +7,6 @@
 
 using namespace cv;
 
-#define RADIUS 10
-
 
 
 bool inCircle(int x, int y, int center_x, int center_y) {
@@ -41,17 +39,18 @@ int getRecommendation (int x, int y, int rad, Mat masks[]) {
 
 int main (int argc, char* argv[]) {
     
-    if (argc < 2) {
-        std::cout << "Usage example: ./" << argv[0] << " [image file name]";
+    if (argc < 3) {
+        std::cout << "Usage example: ./" << argv[0] << " [image file name] [sampling points file]";
     }
 
     // Load in the sampling data
     std::vector<int> sampling_centers_x, sampling_centers_y;
 
     std::cout << "Loading sampling points" << std::endl;
-    std::fstream sampling_file(SAMPLING_FILE);
+    std::fstream sampling_file(argv[2]);
     int x, y;
-    while (sampling_file >> x >> y) {
+    std::string facelet;
+    while (sampling_file >> x >> y >> facelet) {
         sampling_centers_x.push_back(x);
         sampling_centers_y.push_back(y);
     }
@@ -70,39 +69,16 @@ int main (int argc, char* argv[]) {
     Mat hsv ;
     cvtColor(image, hsv, COLOR_BGR2HSV);
     
-    cv::Scalar red_low(0, 100, 0);
-    cv::Scalar red_high(8, 255, 170);
-    cv::Scalar red_low_2(150, 20, 20);
-    cv::Scalar red_high_2(255, 200, 200);
-    cv::Mat red_mask;
-    cv::Mat red_mask_2;
-    cv::Scalar orange_low(10, 40, 80);
-    cv::Scalar orange_high(25, 255, 250);
-    cv::Mat orange_mask;
-    cv::Scalar yellow_low(26, 20, 20);
-    cv::Scalar yellow_high(45, 255, 255);
-    cv::Mat yellow_mask;
-    cv::Scalar white_low(0, 0, 100);
-    cv::Scalar white_high(255, 35, 255);
-    cv::Mat white_mask;
-    cv::Scalar blue_low(100, 70, 50);
-    cv::Scalar blue_high(140, 250, 250);
-    cv::Mat blue_mask;
-    cv::Scalar green_low(40, 35, 50);
-    cv::Scalar green_high(95, 255, 255);
-    cv::Mat green_mask;
-
-
-
-    inRange(hsv,white_low , white_high, white_mask);
-    inRange(hsv,red_low , red_high, red_mask);
-    inRange(hsv,red_low_2 , red_high_2, red_mask_2);
-    inRange(hsv,blue_low , blue_high, blue_mask);
-    inRange(hsv,green_low , green_high, green_mask);
-    inRange(hsv, orange_low , orange_high, orange_mask);
-    inRange(hsv, yellow_low , yellow_high, yellow_mask);
-
-    red_mask = red_mask | red_mask_2;
+    cv::Mat red_mask, red_mask_2, orange_mask, orange_mask_2,  yellow_mask, white_mask, blue_mask, green_mask;
+    cv::inRange(hsv, WHITE_LOW , WHITE_HIGH, white_mask);
+    cv::inRange(hsv, RED_LOW , RED_HIGH, red_mask);
+    cv::inRange(hsv, RED_LOW_2 , RED_HIGH_2, red_mask_2);
+    cv::inRange(hsv, BLUE_LOW , BLUE_HIGH, blue_mask);
+    cv::inRange(hsv, GREEN_LOW , GREEN_HIGH, green_mask);
+    cv::inRange(hsv, ORANGE_LOW , ORANGE_HIGH, orange_mask);
+    cv::inRange(hsv, ORANGE_LOW_2 , ORANGE_HIGH_2, orange_mask_2);
+    cv::inRange(hsv, YELLOW_LOW , YELLOW_HIGH, yellow_mask);
+    orange_mask = orange_mask | orange_mask_2;
 
     Mat masks[] = {blue_mask, green_mask, orange_mask, red_mask, white_mask, yellow_mask};
     Scalar colors[] = COLOR_ORDER;
@@ -111,15 +87,15 @@ int main (int argc, char* argv[]) {
 
     for (size_t i = 0; i < sampling_centers_x.size(); i++) {
         int rec = getRecommendation(sampling_centers_x[i], sampling_centers_y[i], RADIUS, masks);
-        std::cout << sampling_centers_x[i] << ", " << sampling_centers_y[i] << " color: " << rec << std::endl;
         cv::circle(image, cv::Point(sampling_centers_x[i], sampling_centers_y[i]), RADIUS,  colors[rec], -1);
     }
 
+    std::string names[] = DATA_ORDER;
 
     for (int i = 0; i < 6; i++) {
-        namedWindow("Training Client", WINDOW_AUTOSIZE);
-        imshow("Training Client", masks[i]);
-        waitKey(0);
+        std::string window_name = names[i] + " mask";
+        namedWindow(window_name, WINDOW_AUTOSIZE);
+        imshow(window_name, masks[i]);
     }
 
     namedWindow("Training Client", WINDOW_AUTOSIZE);

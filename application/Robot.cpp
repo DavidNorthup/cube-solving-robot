@@ -112,7 +112,6 @@ namespace csr {
                 std::string move = moves.substr(last_space + 1, len);
                 len = 0;
                 performMove(move);
-                // usleep(10000);
                 reverse = reverseMove(move) + " " + reverse;
                 last_space = i;
             } else {

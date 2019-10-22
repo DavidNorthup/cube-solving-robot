@@ -1,9 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include "Camera.h"
 #include <iostream>
+#include <fstream>
 
 int main (int argc, char* argv[]) {
-    if (argc < 2) {
+    if (argc < 3) {
+        std::cout << "Not enough args, example use: " << argv[0] << " [sample image file]   [facelet name (ex: B9)]" << std::endl; 
         return 1;
     }
     sf::Image image; 
@@ -12,6 +14,8 @@ int main (int argc, char* argv[]) {
         std::cerr << "Error opening image" << std::endl;
         return 1;
     }
+
+    std::fstream fs(argv[2]);
 
     sf::Sprite sprite;
     sf::Texture texture;
@@ -29,7 +33,10 @@ int main (int argc, char* argv[]) {
 
                 if (event.type == sf::Event::MouseButtonPressed) {
                     sf::Vector2i position = sf::Mouse::getPosition(window);
-                    std::cout << position.x << " " << position.y << std::endl;
+                    std::cout << "What is the facelet name for this position: " << std::endl;
+                    std::string name;
+                    std::cin >> name;
+                    fs << position.x << " " << position.y << " " << name << std::endl;
                 }
         }
 

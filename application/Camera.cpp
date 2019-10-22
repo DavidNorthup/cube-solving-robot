@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <cmath>
 
+#define FPS_VALUE 15
+
 using namespace camera;
 
 /*
@@ -10,23 +12,27 @@ fetch images from the connected webcam using opencv, and format them for
 display in the sfml window. For this to occur, the window will call the
 update function continulosly, and a new image will be fetched as often as possible. 
 */
-CameraManager::CameraManager(int camera_index, int image_width, int image_height) {
+CameraManager::CameraManager(int camera_index, int image_width, int image_height, std::string sampling_filename) {
+
     bool opened = changeCamera(camera_index);
     if (!opened) {
         std::cout << "Failed to open the camera, closing program" << std::endl;
         exit(EXIT_FAILURE);
     }
-    std::cout << "Setting camera output dimensions: " << image_width 
-        << " x " << image_height << std::endl;
-    std::cout << "Opening Sampling Locations File" << std::endl;
-    std::fstream sampling_file(SAMPLING_FILE);
+
+    cam.set(cv::CAP_PROP_FPS, FPS_VALUE);
+    cam.set(cv::CAP_PROP_FRAME_WIDTH, image_width);
+    cam.set(cv::CAP_PROP_FRAME_HEIGHT, image_height);
+
+    std::fstream sampling_file(sampling_filename);
     int x, y;
-    while (sampling_file >> x >> y) {
+    std::string facelet_name;
+    while (sampling_file >> x >> y >> facelet_name) {
         cv::Point currentPoint(x,y);
         sampling_centers.push_back(currentPoint);
+        sampling_center_facelets.push_back(facelet_name);
     }
     sampling_file.close();
-    std::cout << "Done reading sampling locations" << std::endl;
     cam >> current_frame; // Assure this is never null
 }
 
@@ -61,8 +67,30 @@ bool CameraManager::changeCamera(int camera_index) {
     return success;
 }
 
+/*
+This function returns the scanned data for the current frame
+*/
+std::vector<int> CameraManager::getData() {
+    return this->scanned_data;
+}
+
+/*
+This function returns the scanned data's corresponding facelet names.
+*/
+std::vector<std::string> CameraManager::getFacelets() {
+    return this->sampling_center_facelets;
+}
+
 void CameraManager::changeCameraBrightness(double value) {
     cam.set(cv::CAP_PROP_BRIGHTNESS, value);
+}
+
+void CameraManager::changeCameraContrast(double value) {
+    cam.set(cv::CAP_PROP_CONTRAST, value);
+}
+
+void CameraManager::changeCameraSaturation(double value) {
+    cam.set(cv::CAP_PROP_SATURATION, value);
 }
 
 /*
@@ -70,7 +98,7 @@ Capture the current image from the webcam.
 */
 void CameraManager::update() {
     cam >> current_frame;
-    CSRImageProcessing::highlightMat(current_frame, sampling_centers);
+    this->scanned_data = CSRImageProcessing::highlightMat(current_frame, sampling_centers);
 }
 
 /*
@@ -90,6 +118,12 @@ sf::Image CameraManager::getDisplayableImage() {
     return image;
 }
 
+cv::Mat CameraManager::getUnmarkedImage() {
+    cv::Mat image;
+    cam >> image;
+    return image;
+}
+
 /*
 This function uses defined HSV ranges to figure out what color each sample (given by sampling_centers and RADIUS)
 are. It then highlights the image. It will return the data for use in solving the cube as well.
@@ -102,16 +136,18 @@ std::vector<int> CSRImageProcessing::highlightMat(cv::Mat& image, std::vector<cv
     cv::Mat hsv ;
     cv::cvtColor(image, hsv, cv::COLOR_BGR2HSV);
     
-    cv::Mat red_mask, red_mask_2, orange_mask, yellow_mask, white_mask, blue_mask, green_mask;
+    cv::Mat red_mask, red_mask_2, orange_mask, orange_mask_2,  yellow_mask, white_mask, blue_mask, green_mask;
     cv::inRange(hsv, WHITE_LOW , WHITE_HIGH, white_mask);
     cv::inRange(hsv, RED_LOW , RED_HIGH, red_mask);
     cv::inRange(hsv, RED_LOW_2 , RED_HIGH_2, red_mask_2);
     cv::inRange(hsv, BLUE_LOW , BLUE_HIGH, blue_mask);
     cv::inRange(hsv, GREEN_LOW , GREEN_HIGH, green_mask);
     cv::inRange(hsv, ORANGE_LOW , ORANGE_HIGH, orange_mask);
+    cv::inRange(hsv, ORANGE_LOW_2 , ORANGE_HIGH_2, orange_mask_2);
     cv::inRange(hsv, YELLOW_LOW , YELLOW_HIGH, yellow_mask);
 
-    red_mask = red_mask | red_mask_2;
+    red_mask = red_mask | red_mask_2; 
+    orange_mask = orange_mask | orange_mask_2;
 
     cv::Mat masks[] = {blue_mask, green_mask, orange_mask, red_mask, white_mask, yellow_mask};
 
