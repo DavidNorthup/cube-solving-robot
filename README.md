@@ -20,3 +20,17 @@ This file is meant to be run with an image captured from the webcam you are atte
 
 ## Mask Viewer
 The current implementation of the software uses opencv to select ranges of pixels defined by HSV value bounds in "Camera.h" for each of the colors on the cube. Opencv iterates through the image once for each color and generates a binary matrix of pixels with value 0 everywhere any given pixel is outside of the bounds for the speicifed color. Then it uses the sampling centers to count the number of pixels in range inside each circle defined by the center and a radius that match each color. The software then counts the number of matches for each color and whichever is highest is determined as the color for that point. This utility allows you to see the masks for a given sample image, and then reveals what it would conclude given the current bounds. Example usage is: ./training-mask.exe [image_file] [sampling locations].
+
+
+# Installation Details:
+1.) The first step is to install opencv, I used [this page](https://docs.opencv.org/master/d7/d9f/tutorial_linux_install.html).
+
+2.) Install SFML, I used my package manager to install using: apt-get install libsfml-dev.
+
+3.) Clone this repository and the kociemba repository, and make the target within 'ckociemba'.
+
+4.) Place the executable compiled in hte step prior into the application directory.
+
+5.) Compile all of the executables within the application directory.
+
+6.) Install the arduino software on the boards, with the sketch and libraries included.
