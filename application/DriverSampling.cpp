@@ -1,11 +1,13 @@
 #include <SFML/Graphics.hpp>
-#include "Camera.h"
 #include <iostream>
 #include <fstream>
 
+#include "Camera.h"
+
+
 int main (int argc, char* argv[]) {
     if (argc < 3) {
-        std::cout << "Not enough args, example use: " << argv[0] << " [sample image file]   [facelet name (ex: B9)]" << std::endl; 
+        std::cout << "Not enough args, example use: " << argv[0] << " [sample image file]   [sampling center output file]" << std::endl; 
         return 1;
     }
     sf::Image image; 

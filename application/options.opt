@@ -3,10 +3,10 @@ Camera_brightness_frd 95
 Camera_brightness_flu 100
 Camera_brightness_bru 90
 Camera_contrast_bld 25
-Camera_contrast_frd 25
+Camera_contrast_frd 30
 Camera_contrast_flu 30
-Camera_contrast_bru 20
+Camera_contrast_bru 25
 Camera_saturation_bld 30
 Camera_saturation_frd 30
 Camera_saturation_flu 30
-Camera_saturation_bru 20
+Camera_saturation_bru 30

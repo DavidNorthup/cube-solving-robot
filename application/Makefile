@@ -6,20 +6,19 @@ OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=csr.exe
 
 
-all: $(EXECUTABLE)
+all: $(EXECUTABLE) sampling-config.exe training-mask.exe
 
-$(EXECUTABLE): $(OBJECTS) *.h
+$(EXECUTABLE): $(OBJECTS) 
 	$(CC) $(OBJECTS) -o $@  $(LDFLAGS)
 
-.cpp.o: $< *.h
-	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
+.cpp.o: $<
+	$(CC) $(CFLAGS) $< -c $(LDFLAGS)
 
 clean:
 	rm *.o *.exe
 
-
 sampling-config.exe: DriverSampling.cpp
 	$(CC) DriverSampling.cpp -o sampling-config.exe $(LDFLAGS)
 
-training-mask.exe: TrainingTestMask.cpp
+training-mask.exe: TrainingTestMask.cpp Camera.o
 		$(CC) TrainingTestMask.cpp -o training-mask.exe $(LDFLAGS)

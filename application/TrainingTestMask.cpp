@@ -79,6 +79,7 @@ int main (int argc, char* argv[]) {
     cv::inRange(hsv, ORANGE_LOW_2 , ORANGE_HIGH_2, orange_mask_2);
     cv::inRange(hsv, YELLOW_LOW , YELLOW_HIGH, yellow_mask);
     orange_mask = orange_mask | orange_mask_2;
+    red_mask = red_mask | red_mask_2;
 
     Mat masks[] = {blue_mask, green_mask, orange_mask, red_mask, white_mask, yellow_mask};
     Scalar colors[] = COLOR_ORDER;
