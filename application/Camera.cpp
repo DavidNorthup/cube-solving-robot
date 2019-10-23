@@ -161,17 +161,27 @@ std::vector<int> CSRImageProcessing::highlightMat(cv::Mat& image, std::vector<cv
     return data;
 }
 
-
+/*
+This function saves the opencv Mat object into an image specified by the variable path
+*/
 void CSRImageProcessing::saveImageToFile(std::string path, cv::Mat& image) {
     cv::imwrite(path, image);
     std::cout << "Saved image to file." << std::endl;
 }
 
+/*
+This helper function is used by the color reccomendation function. It is used to 
+determine if the point P is geometrically within the circle given by center and radius.
+*/
 bool CSRImageProcessing::pointInCircle(cv::Point p, cv::Point center, int radius) {
     int dx = p.x - center.x, dy = p.y - center.y;
     return std::sqrt(dx*dx + dy*dy) <= radius;
 }
 
+/*
+This function gives a recommendation for the cube facelet color by examining each of the color 
+masks. We sample in a circle with center (x,y) with radius rad.
+*/
 int CSRImageProcessing::getReccomendation(int x, int y, int rad, cv::Mat masks[]) {
     int maxCount = 0, maxIndex = 0;
     for (int i = 0; i < 6; i++) {

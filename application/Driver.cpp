@@ -266,6 +266,20 @@ int main(int argc, char *argv[]) {
                     if (event.key.code == sf::Keyboard::B) {
                         robot.performMove("B");
                     }
+
+                    if (event.key.code == sf::Keyboard::V) {
+                        int counts[] = {0,0,0,0,0,0};
+                        for (int i = 0; i < 54; i++) {
+                            counts[data[i]]++;
+                        }
+
+                        bool valid = true;
+                        for (int i = 0; i < 6 && valid; i++) {
+                            valid = counts[i] == 9;
+                        }
+
+                        std::cout << "Valid: " << valid << std::endl;
+                    }
                 } else if (alt_held) {
                     if (event.key.code == sf::Keyboard::R) {
                         robot.performMove("R'");
